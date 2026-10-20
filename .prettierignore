@@ -1,0 +1,7 @@
+node_modules
+dist
+tmp
+artifacts
+.npm-cache
+package-lock.json
+output

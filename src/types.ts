@@ -1,4 +1,20 @@
-export type IconName = 'grid' | 'plane' | 'people' | 'book' | 'building' | 'briefcase' | 'sun' | 'moon' | 'search' | 'arrow' | 'bell' | 'help' | 'close' | 'check' | 'globe' | 'shield';
+export type IconName =
+  | 'grid'
+  | 'plane'
+  | 'people'
+  | 'book'
+  | 'building'
+  | 'briefcase'
+  | 'sun'
+  | 'moon'
+  | 'search'
+  | 'arrow'
+  | 'bell'
+  | 'help'
+  | 'close'
+  | 'check'
+  | 'globe'
+  | 'shield';
 export type Severity = 'information' | 'warning' | 'critical';
 export interface Company {
   id: string;
@@ -21,6 +37,7 @@ export interface NewsItem {
   id: string;
   title: string;
   body: string;
+  summary?: string;
   severity: Severity;
   companies: string[];
   date: string;

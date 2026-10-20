@@ -13,6 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:browser": "node scripts/browser-check.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "size": "node scripts/bundle-size.mjs"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
     "jsdom": "^27.0.0",
+    "prettier": "^3.9.10",
     "typescript": "~5.9.3",
     "vite": "^7.1.9",
     "vitest": "^4.1.12"
