@@ -4,3 +4,6 @@ tmp/
 test-results/
 playwright-report/
 *.local
+.npm-cache/
+*.tsbuildinfo
+artifacts/
