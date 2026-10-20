@@ -2,8 +2,8 @@
 
 ## Follow one user action
 
-When someone selects Aviation Academy, React updates `companyId` in `App.tsx`.
-The matching configuration supplies its identity and CSS accent variables.
+When someone selects Lagos Aviation Academy, React updates `companyId` in `App.tsx`.
+The matching configuration supplies its verified logo and CSS accent variables.
 `selectContent` receives the employee data, company ID and debounced query. It
 returns apps, search-filtered news and a separate critical-alert collection.
 React renders those results through cards and the critical banner.
@@ -43,7 +43,9 @@ The component opens it, handles Escape, cycles Tab between controls and returns
 focus to its trigger on close. The browser test matters because JSDOM's dialog
 polyfill cannot prove actual focus behavior.
 
-**Theme:** the document stores a light/dark attribute, with semantic CSS variables.
+**Theme:** the document stores a light/dark attribute, with semantic CSS variables
+defined in `tokens.css`. Shared controls use blue; company accents identify the
+selected business and never replace severity colours.
 An early script reads a saved preference (or the OS preference) before React to
 avoid a flash. Storage failures are caught for restricted/shared browsers.
 Only this device preference is persisted.
@@ -51,7 +53,16 @@ Only this device preference is persisted.
 **Responsive layout:** CSS grid adapts the app/news columns; the sidebar becomes
 top navigation on smaller screens. The mobile critical banner uses a grid so its
 action cannot squeeze the message into a narrow column. Optional secondary content
-is hidden on smaller viewports, while essential tasks stay available.
+reflows below the applications on smaller viewports.
+
+**Brand assets:** the uploaded group logo is unchanged on disk; CSS frames its artwork
+area. Official white subsidiary variants use a deep-blue plate, preserving their
+original appearance. Logos are not generated or redrawn. The facilities icon is
+an ordinary UI symbol, not an asserted company mark.
+
+**Live reference:** `design-system.html` is a second Vite entry importing the real
+portal components. It gives reviewers a way to inspect tokens, themes and states
+without adding implementation details to the staff experience.
 
 ## Before the interview
 

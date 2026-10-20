@@ -18,7 +18,12 @@ export function AppCard({
       </div>
       <h3>{app.name}</h3>
       <p>{app.description}</p>
-      <span className="app-category">{app.category}</span>
+      <div className="app-footer">
+        <span className="app-category">{app.category}</span>
+        <span className="app-launch">
+          Open <Icon name="arrow" size={15} />
+        </span>
+      </div>
     </button>
   );
 }

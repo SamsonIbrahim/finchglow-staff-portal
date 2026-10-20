@@ -4,7 +4,8 @@ A focused frontend assessment prototype by Samson Ibrahim, built with React,
 TypeScript and Vite. One front door for six businesses: relevant applications,
 visible operational alerts and company news.
 
-All staff details, incidents, dates and subsidiary identities are illustrative.
+Staff details, incidents and operational dates are illustrative. Company identities
+use the candidate-supplied group logo and verified subsidiary assets.
 The fixed date, 20 October 2026, keeps the demo reproducible. This is not an
 official Finchglow service or an authenticated portal.
 
@@ -18,6 +19,7 @@ npm run dev
 ```
 
 Open the URL printed by Vite (normally http://127.0.0.1:5173).
+Open `/design-system.html` on the same server for the live interface reference.
 
 ```sh
 npm test          # component and domain tests
@@ -37,7 +39,7 @@ Screenshots and a JSON accessibility report are written to ignored `artifacts/`.
 
 - Personalized home and employee home company, separate from the selected workspace.
 - Six business identities configured in one file; switching changes the identity
-  icon, accent, applications and news while preserving group-wide content.
+  logo, accent, applications and news while preserving group-wide content.
 - Employee app entitlements intersected with business availability.
 - Information, warning and critical updates. Critical alerts appear above the
   workspace and **cannot be dismissed or hidden by search**.
@@ -53,6 +55,45 @@ Screenshots and a JSON accessibility report are written to ignored `artifacts/`.
 Expand **Prototype testing controls** at the bottom to simulate normal, slow and
 failed requests. “Try again” returns to a successful response.
 
+## Design system and brand provenance
+
+The interface is white-led with blue shared actions, dark text, restrained surfaces,
+and semantic red/amber/green states. The application grid follows the greeting and
+critical incident; a compact company strip replaces promotional artwork.
+
+`src/tokens.css` defines primitive and semantic colour tokens, a 4 px spacing scale,
+typography, radii, control sizing and motion. `src/styles.css` consumes those tokens.
+The reference page at `/design-system.html` imports the same AppCard, CriticalAlert,
+CompanyIdentity and Modal components as the workspace. It demonstrates both themes,
+actual component interactions, disabled controls, empty states and status treatments.
+It is a separate reviewer resource, not a staff navigation item.
+
+The uploaded group logo is stored unchanged as `public/brand/finchglow-supplied.png`.
+CSS displays its artwork area without redrawing, recolouring or distorting it.
+Subsidiary artwork was downloaded from the [official group website](https://www.finchglowholdings.com/).
+Those assets are white variants and sit on a dark-blue plate in both themes.
+The website's `#F2FAFF` surface and dark-text treatment informed the interface;
+other interface colours are accessible adaptations, not asserted official brand values.
+
+| Assessment function | Identity used                    | Source                                                               |
+| ------------------- | -------------------------------- | -------------------------------------------------------------------- |
+| Corporate TMC       | FCM Travel Nigeria               | [Group brand directory](https://www.finchglowholdings.com/)          |
+| Academy             | Lagos Aviation Academy           | [Academy](https://lagosaviationacademy.com/)                         |
+| OTA                 | Travelden                        | [Travelden](https://www.travelden.com/)                              |
+| B2B                 | Finchglow Travels                | [Consolidator and B2B services](https://finchglowtravels.com/)       |
+| Holidays            | Finchglow Holidays               | [Group brand directory](https://www.finchglowholdings.com/)          |
+| Shared facilities   | Shared Facilities, internal unit | Required by the assessment; ordinary building icon, no invented logo |
+
+The website also lists FinchGlobal. The assessment's six functions are intentionally
+preserved instead of substituting FinchGlobal for shared facilities. The candidate
+confirmed this interpretation.
+
+Asset URLs (retrieved 20 October 2026): `/logos/FCM.svg`, `/logos/LAA.svg`,
+`/logos/Fincglow%20Travels.svg`, `/logos/Finchglow%20Holidays.svg` and the group site's
+`/_next/image?url=%2Flogos%2Ftravelden.png&w=640&q=75`, all on
+`https://www.finchglowholdings.com`. Logos remain their owners' marks; this is an
+assessment concept, not an official branded service.
+
 ## Architecture
 
 | Location                  | Responsibility                                                   |
@@ -64,7 +105,9 @@ failed requests. “Try again” returns to a successful response.
 | `src/lib/portal.ts`       | Pure visibility, entitlement, search and severity ordering logic |
 | `src/components/`         | App cards, news cards, critical alerts, icons and modal behavior |
 | `src/App.tsx`             | Single-screen composition, loading/search/company/theme state    |
-| `src/styles.css`          | Shared semantic color tokens and responsive layout               |
+| `src/tokens.css`          | Primitive and semantic design tokens, including dark theme       |
+| `src/styles.css`          | Shared component styles and responsive layout                    |
+| `src/design-system.tsx`   | Live reference using the same tokens and components              |
 | `scripts/`                | Bundle measurement and browser verification                      |
 
 Local React state is enough for one screen. There is no router, global state
@@ -74,7 +117,7 @@ Effects abort obsolete requests, including React Strict Mode's development repla
 
 To add a seventh business:
 
-1. Add an entry to `companies.ts` with a unique ID, identity icon and accessible accents.
+1. Add an entry to `companies.ts` with a unique ID, function, optional verified logo and accessible accents.
 2. Assign that ID to relevant mock apps/news and grant the appropriate employee app IDs.
 3. Verify its accents in both themes. No company-specific rendering branch is needed.
 
@@ -88,7 +131,8 @@ Validated in installed Chrome at 1440 px desktop, 768 px tablet and 390/320 px p
 widths. The automated browser run includes:
 
 - Axe WCAG 2 A/AA and 2.1 AA checks for all six companies in both themes, three
-  narrower layouts and an open dialog: **16 scans, zero violations**.
+  narrower layouts and an open dialog, plus the design reference at desktop/phone
+  widths in both themes: **20 scans, zero violations**.
 - No horizontal overflow at tested widths.
 - Keyboard app launch, dialog focus containment, Escape dismissal and focus return.
 - Critical alert visibility during unmatched search and failed refresh, plus retry.
@@ -109,13 +153,19 @@ shared tablets remain outstanding; the browser tests use desktop Chrome emulatio
 
 ## Performance
 
-Measured production JS + CSS, including the mock chunk: **260.95 KiB raw /
-80.86 KiB gzip**. Run `npm run build && npm run size` for exact current figures.
+Measured workspace JS + CSS, including the mock chunk: **263.90 KiB raw /
+81.83 KiB gzip**. The default workspace's group and FCM logo assets add
+**175.32 KiB gzip**, for a combined **257.15 KiB gzip** code-and-logo estimate.
+The separate design reference has its own entry and does not add its page code
+to the staff workspace. Run `npm run build && npm run size` for exact current figures.
 Gzip sizes describe compressed build assets, not a measured network response or
 Core Web Vitals score.
 
-System fonts and inline SVG/CSS artwork require no extra asset requests. No remote
-services, heavy component library or image payloads are involved. Search stays local.
+System fonts and inline interface icons avoid font or icon-package requests. The
+supplied group logo and selected subsidiary logo are served locally; other company
+logos load only when selected. The size script reports their cost separately from
+code, including the default workspace total. No remote services or heavy component
+library are involved. Search stays local.
 Render-blocking resources are small; the mock data loads separately. A production
 host should use Brotli/gzip and immutable caching for hashed assets, and revalidate
 HTML. Do not cache authenticated incident responses as if they were static assets.

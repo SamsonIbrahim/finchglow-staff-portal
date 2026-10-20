@@ -7,19 +7,22 @@ Validated on 20 October 2026 using Node 24.19 and installed Google Chrome.
 | TypeScript strict check             | Pass                                                                 |
 | Vite production build               | Pass                                                                 |
 | Vitest component/domain tests       | 11 passed across 2 files                                             |
-| Axe WCAG 2 A/AA + 2.1 AA scans      | 16 scans, zero violations                                            |
+| Axe WCAG 2 A/AA + 2.1 AA scans      | 20 scans, zero violations                                            |
 | Browser runtime errors              | Zero                                                                 |
 | Horizontal overflow                 | None at 768, 390 and 320 CSS pixels                                  |
 | Keyboard dialog                     | Enter opens; Tab stays inside; Escape closes and restores focus      |
 | Search safety                       | Unmatched search does not hide the critical group alert              |
 | Failed-refresh recovery             | Retains the critical alert, warns of staleness, retries successfully |
 | Dependency audit after installation | Zero known vulnerabilities reported                                  |
-| Production JS + CSS                 | 260.95 KiB raw; 80.86 KiB gzip                                       |
+| Workspace JS + CSS                  | 263.90 KiB raw; 81.83 KiB gzip                                       |
+| Workspace code + default logos      | 562.09 KiB raw; 257.15 KiB gzip                                      |
 
 The final browser run targeted the optimized production preview on port 4173.
 The accessibility matrix includes six companies in each theme (12 scans), the three
-narrower viewport sizes and one open-dialog state. Light and dark desktop screenshots
-and tablet/phone screenshots were inspected. Automated output can be regenerated with
+narrower viewport sizes and one open-dialog state, plus the design reference in both
+themes at 1440 and 390 px. Light and dark desktop screenshots, tablet/phone screenshots
+and the reference page were inspected. Logo loading is asserted for each company.
+Automated output can be regenerated with
 `npm run test:browser`; generated reports are ignored by Git.
 
 ## Issues found and corrected
@@ -30,6 +33,9 @@ and tablet/phone screenshots were inspected. Automated output can be regenerated
    first/last control cycling now keeps focus inside and preserves Escape behavior.
 3. The original test runner dependency had audit findings. Updating it removed those
    findings, followed by a passing test run.
+4. Official subsidiary assets are white variants, which disappeared on white surfaces.
+   Deep-blue logo plates now display the original artwork in both themes without
+   recolouring or redrawing it. The candidate-supplied group logo is unchanged.
 
 ## Limits
 

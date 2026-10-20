@@ -1,7 +1,7 @@
 # 20-minute presentation
 
 Practice once before submitting. Keep a desktop browser and a 390 px responsive
-viewport ready. Start in light mode, Travel Management, with an empty search.
+viewport ready. Start in light mode, FCM Travel Nigeria, with an empty search.
 Use your own words; do not describe checks you have not personally performed.
 
 ## 0:00–2:00 · Problem and assumptions
@@ -9,7 +9,7 @@ Use your own words; do not describe checks you have not personally performed.
 “Staff across six businesses need to reach their tools quickly and notice operational
 disruption. I treated this as a work-starting surface, not a reporting dashboard.”
 
-Explain the mock identity, fixed date and concept subsidiary brands. Mention the
+Explain the mock employee, fixed date and verified company artwork. Mention the
 limited scope: a home experience, no real backend or SSO.
 
 ## 2:00–6:00 · Desktop journey
@@ -18,7 +18,7 @@ limited scope: a home experience, no real backend or SSO.
 2. Explain why the critical payment alert appears before the launcher.
 3. Open the alert: clear instructions and next update, then Escape.
 4. Launch Booking workspace. Explain that the dialog is an honest integration boundary.
-5. Switch to Aviation Academy: identity/accent/apps/news change, group outage remains.
+5. Switch to Lagos Aviation Academy: logo/accent/apps/news change, group outage remains.
 6. Search “leave” to locate People & HR. Search “zzzz” to show empty states while
    the critical alert remains visible; clear the search.
 
@@ -38,8 +38,9 @@ At the bottom, open Prototype testing controls. Select Slow and show loading.
 Select Failure and point out the stale-data message plus retained critical alert.
 Click Try again. Explain that in-memory retention is not offline caching.
 
-Show `npm run size` output. Explain system fonts, inline SVG, no UI framework,
-local search and no network image requests. Avoid claiming a Lighthouse score.
+Show `npm run size` output. Explain system fonts, inline interface icons, no UI
+framework, local search and locally served company logos. Report code and asset
+cost separately. Avoid claiming a Lighthouse score.
 
 ## 12:00–16:00 · Code and three decisions
 
@@ -47,6 +48,9 @@ Open `companies.ts`, `portal.ts` and one component test. Trace:
 company selection → pure selector → visible apps/news → reusable components.
 Explain how a seventh business is added. Use the decision log to discuss incident
 prominence, shared architecture and choosing dark mode over offline scope.
+Briefly show `/design-system.html`: it uses the same React components and CSS tokens,
+not independent mockups. Explain the difference between brand accents and status
+colours, and why Shared Facilities has no fabricated company logo.
 
 ## 16:00–18:00 · Production boundary
 

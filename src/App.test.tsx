@@ -21,7 +21,7 @@ describe('portal interactions', () => {
       'academy',
     );
     expect(
-      screen.getByRole('region', { name: 'Aviation Academy workspace' }),
+      screen.getByRole('region', { name: 'Lagos Aviation Academy workspace' }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: /Booking workspace Flights/ }),

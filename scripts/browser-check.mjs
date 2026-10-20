@@ -35,6 +35,13 @@ try {
       await page
         .getByLabel('Your workspace', { exact: true })
         .selectOption(company);
+      for (const image of await page.locator('img').all()) {
+        await image.evaluate(async (element) => {
+          if (!element.complete) await element.decode();
+          if (!element.naturalWidth)
+            throw new Error(`Image did not load: ${element.src}`);
+        });
+      }
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
@@ -47,6 +54,7 @@ try {
       path: `artifacts/desktop-${theme}.png`,
       fullPage: true,
     });
+    await page.screenshot({ path: `artifacts/overview-${theme}.png` });
   }
   await page.getByRole('button', { name: 'Switch to light mode' }).click();
   for (const width of [768, 390, 320]) {
@@ -65,6 +73,8 @@ try {
       path: `artifacts/viewport-${width}.png`,
       fullPage: true,
     });
+    if (width === 390)
+      await page.screenshot({ path: 'artifacts/mobile-overview.png' });
   }
   await writeFile(
     'artifacts/browser-report.json',
@@ -113,6 +123,39 @@ try {
   await page
     .getByRole('button', { name: 'Try again' })
     .waitFor({ state: 'detached' });
+  await page.goto(
+    new URL(
+      '/design-system.html',
+      process.env.BASE_URL || 'http://127.0.0.1:5173/',
+    ).href,
+  );
+  await page.getByRole('heading', { name: /One group/ }).waitFor();
+  for (const theme of ['light', 'dark']) {
+    if (theme === 'dark')
+      await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 1000 });
+      assert(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        `Design system overflow at ${width}px`,
+      );
+      const scan = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      checks.push({
+        state: 'design-system',
+        theme,
+        width,
+        violations: scan.violations,
+      });
+      await page.screenshot({
+        path: `artifacts/design-system-${theme}-${width}.png`,
+        fullPage: true,
+      });
+    }
+  }
   await writeFile(
     'artifacts/browser-report.json',
     JSON.stringify({ checks, runtimeErrors: failures }, null, 2),

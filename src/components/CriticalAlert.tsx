@@ -19,7 +19,7 @@ export function CriticalAlert({
       </span>
       <div>
         <div className="alert-kicker">
-          CRITICAL ALERT{' '}
+          <span className="severity-dot" /> CRITICAL INCIDENT{' '}
           <span>
             {alert.companies.includes('group')
               ? 'GROUP-WIDE'

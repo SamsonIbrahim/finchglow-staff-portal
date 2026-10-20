@@ -2,9 +2,10 @@
 
 ## Product
 
-One calm front door for staff across six businesses. Prioritize finding tools and
-noticing operational disruption. Use mock company identities; do not imply these
-are approved subsidiary brands. All employee, incident and news content is fictional.
+One calm front door for staff across six assessment functions. Prioritize finding
+tools and noticing operational disruption. Use the candidate-supplied group logo
+and verified subsidiary artwork. Preserve Shared Facilities as an internal unit
+with no invented logo. All employee, incident and news content is fictional.
 
 ## Sequence
 
@@ -15,6 +16,8 @@ are approved subsidiary brands. All employee, incident and news content is ficti
 4. Verify filtering, errors, keyboard interaction, mobile layout and accessibility.
 5. Measure the production bundle and write the README, three-decision log and
    20-minute presentation guide.
+6. Apply a white-led visual system with blue shared actions and separate semantic
+   status colours. Document the same tokens and real components in a live reference.
 
 ## Acceptance
 
@@ -24,6 +27,8 @@ are approved subsidiary brands. All employee, incident and news content is ficti
 - Keyboard focus is visible; native controls retain expected semantics.
 - A new company is a configuration addition, not a new component.
 - No actual authentication or business systems are connected.
+- Logo provenance is recorded; shared controls do not change meaning across brands.
+- The design reference and workspace use the same components and design tokens.
 
 ## Scope
 

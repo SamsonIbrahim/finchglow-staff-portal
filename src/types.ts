@@ -24,6 +24,8 @@ export interface Company {
   icon: IconName;
   accent: string;
   darkAccent: string;
+  logo?: string;
+  function: string;
 }
 export interface PortalApp {
   id: string;

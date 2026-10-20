@@ -5,6 +5,7 @@ import { Modal } from './components/Modal';
 import { AppCard } from './components/AppCard';
 import { CriticalAlert } from './components/CriticalAlert';
 import { NewsCard, severityLabel } from './components/NewsCard';
+import { CompanyIdentity } from './components/CompanyIdentity';
 import { loadPortal, type DemoScenario } from './lib/api';
 import { formatDate, selectContent } from './lib/portal';
 import type { NewsItem, PortalApp, PortalData } from './types';
@@ -88,18 +89,14 @@ export default function App() {
           href="#main"
           aria-label="Finchglow workspace home"
         >
-          <span className="brand-symbol" aria-hidden="true">
-            f<span />
-          </span>
-          <span>
-            finchglow<small>H O L D I N G S</small>
+          <span className="supplied-logo">
+            <img src="/brand/finchglow-supplied.png" alt="Finchglow Holdings" />
           </span>
         </a>
-        <div className="workspace-label">THE GROUP WORKSPACE</div>
+        <div className="workspace-label">
+          <span /> STAFF WORKSPACE
+        </div>
         <div className="company-control">
-          <span className="company-symbol">
-            <Icon name={company.icon} size={22} />
-          </span>
           <div>
             <label htmlFor="company">Your workspace</label>
             <select
@@ -115,6 +112,7 @@ export default function App() {
             </select>
           </div>
         </div>
+        <span className="nav-label">WORKSPACE</span>
         <nav aria-label="Workspace">
           <a className="nav-home" href="#main" onClick={clearSearch}>
             <Icon name="grid" /> Overview <span className="nav-dot" />
@@ -128,19 +126,9 @@ export default function App() {
           </a>
         </nav>
         <div className="sidebar-note">
-          <div className="orbit-art" aria-hidden="true">
-            <Icon name="globe" size={36} />
-            <span>✦</span>
-          </div>
-          <strong>
-            One group.
-            <br />A world of possibilities.
-          </strong>
-          <p>
-            Your people, tools and updates.
-            <br />
-            All connected.
-          </p>
+          <Icon name="globe" size={22} />
+          <strong>Connected across the group.</strong>
+          <p>One place for the tools and updates that move your day forward.</p>
         </div>
         <button
           className="support-button"
@@ -201,12 +189,12 @@ export default function App() {
         <main id="main" tabIndex={-1}>
           <div className="page-heading">
             <div>
-              <span className="eyebrow">A LITTLE MORE CONNECTED</span>
-              <h1>Your day. All in one place.</h1>
-              <p>
-                Welcome back, {data?.employee.name.split(' ')[0] ?? 'Samson'}.
-                Let’s get you where you need to be.
-              </p>
+              <span className="eyebrow">YOUR WORKDAY, CONNECTED</span>
+              <h1>
+                Welcome back, {data?.employee.name.split(' ')[0] ?? 'Samson'}
+                <span className="heading-period">.</span>
+              </h1>
+              <p>Your tools, your team, and what needs your attention.</p>
             </div>
             <div className="date-block">
               <span>TUESDAY</span>
@@ -247,37 +235,7 @@ export default function App() {
             </div>
           )}
 
-          <section
-            className="welcome-panel"
-            aria-label={`${company.name} workspace`}
-          >
-            <div className="welcome-copy">
-              <div className="company-eyebrow">
-                <Icon name={company.icon} size={17} /> {company.name}
-              </div>
-              <h2>
-                Good journeys start
-                <br />
-                with great teamwork.
-              </h2>
-              <p>{company.description}</p>
-              <a href="#apps">
-                Find your next tool <Icon name="arrow" size={17} />
-              </a>
-            </div>
-            <div className="journey-art" aria-hidden="true">
-              <div className="orbit orbit-one" />
-              <div className="orbit orbit-two" />
-              <div className="orbit orbit-three" />
-              <span className="art-point point-one" />
-              <span className="art-point point-two" />
-              <span className="art-point point-three" />
-              <div className="art-plane">
-                <Icon name="plane" size={52} />
-              </div>
-              <span className="art-label">CONNECTED BY POSSIBILITY</span>
-            </div>
-          </section>
+          <CompanyIdentity company={company} />
 
           <div className="search-status sr-only" role="status">
             {searching
@@ -313,7 +271,6 @@ export default function App() {
             >
               <div className="section-heading">
                 <div>
-                  <span className="eyebrow">READY WHEN YOU ARE</span>
                   <h2 id="apps-heading">
                     Your applications{' '}
                     <span className="count-pill">
@@ -321,7 +278,9 @@ export default function App() {
                     </span>
                   </h2>
                 </div>
-                <span className="section-meta">Your everyday toolkit</span>
+                <span className="section-meta">
+                  Everything you need to get started
+                </span>
               </div>
               {!data && loading ? (
                 <div className="apps-grid skeleton-grid" aria-hidden="true">
@@ -372,8 +331,8 @@ export default function App() {
             </section>
 
             <aside className="at-a-glance" aria-labelledby="glance-heading">
-              <span className="eyebrow">IN THE LOOP</span>
-              <h2 id="glance-heading">At a glance</h2>
+              <span className="eyebrow">YOUR PEOPLE & PLACE</span>
+              <h2 id="glance-heading">Workspace details</h2>
               <div className="glance-row">
                 <span className="glance-icon">
                   <Icon name="building" />
@@ -382,7 +341,7 @@ export default function App() {
                   <small>Your home company</small>
                   <strong>
                     {companies.find((c) => c.id === data?.employee.companyId)
-                      ?.name ?? 'Travel Management'}
+                      ?.name ?? 'FCM Travel Nigeria'}
                   </strong>
                 </div>
               </div>
@@ -391,15 +350,17 @@ export default function App() {
                   <Icon name="globe" />
                 </span>
                 <div>
-                  <small>Part of something bigger</small>
-                  <strong>{companies.length} businesses. One group.</strong>
+                  <small>Your role</small>
+                  <strong>{data?.employee.role ?? 'Travel consultant'}</strong>
                 </div>
               </div>
               <div className="glance-divider" />
-              <span className="mini-label">A BETTER WORKDAY</span>
-              <h3>Make space to grow.</h3>
+              <span className="mini-label">
+                <Icon name="book" size={18} /> LEARNING & DEVELOPMENT
+              </span>
+              <h3>Your next skill starts here.</h3>
               <p>
-                Small steps, new skills. Explore your learning opportunities.
+                Explore courses and resources for your professional development.
               </p>
               <button
                 className="text-button"
@@ -428,7 +389,6 @@ export default function App() {
           >
             <div className="section-heading">
               <div>
-                <span className="eyebrow">ACROSS YOUR WORLD</span>
                 <h2 id="news-heading">
                   News & updates{' '}
                   <span className="count-pill">
@@ -437,7 +397,7 @@ export default function App() {
                 </h2>
               </div>
               <span className="section-meta">
-                For {company.shortName.toLowerCase()} & the group
+                Company updates & group announcements
               </span>
             </div>
             {!data && loading ? (
@@ -478,7 +438,7 @@ export default function App() {
               Finchglow Holdings <span className="footer-dot">·</span> Better,
               together.
             </span>
-            <span>Assessment prototype · All content is fictional</span>
+            <span>Assessment prototype · Mock operational data</span>
           </footer>
           <details className="demo-controls">
             <summary>Prototype testing controls</summary>

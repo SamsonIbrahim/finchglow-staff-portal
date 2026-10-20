@@ -5,3 +5,4 @@ artifacts
 .npm-cache
 package-lock.json
 output
+public/brand

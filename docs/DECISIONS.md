@@ -17,7 +17,7 @@ rules and are not claimed here.
 ## 2. Shared structure versus six bespoke experiences
 
 The same components, navigation and content contracts serve every company.
-Configuration changes identity icons and accessible accents; audience metadata
+Configuration changes verified logos and accessible accents; audience metadata
 filters content. App visibility is the intersection of entitlement and company
 availability, while group content remains visible.
 
@@ -25,8 +25,9 @@ Rejected: duplicated pages or conditionals for every subsidiary. They permit fas
 one-off changes but make accessibility and later additions expensive. Cost: brands
 have limited expressive range in this prototype. If OTA needs different navigation,
 extend configuration with a validated navigation schema; fork a component only for
-a demonstrated difference in user task, not merely a new logo. Current identities
-are concepts rather than official brand assets.
+a demonstrated difference in user task, not merely a new logo. The group logo is
+candidate-supplied; subsidiary artwork comes from the official group site. Shared
+Facilities remains an internal unit to preserve the brief's six functions.
 
 ## 3. A demonstrable slice versus infrastructure breadth
 
@@ -35,9 +36,13 @@ are sufficient for one home screen. Dark mode is the single extra because it dir
 supports late shifts and can be evaluated across all six brands. It persists only a
 device appearance preference.
 
-Rejected: a router/state framework, a comprehensive design-system package and an
+Rejected: a router/state framework, a standalone component-library package and an
 offline service worker. They consume the assessment's limited scope without proving
 the central user journey; stale incidents and shared-device storage also deserve
 more careful design. Cost: no offline reload, real SSO or application handoff.
 Production work starts at the transport/identity boundary, with server-enforced
 authorization, freshness rules and assistive-technology testing.
+
+The design reference is a lightweight second build entry sharing real portal
+components and semantic tokens. It documents the visual system without introducing
+a separate UI framework or duplicating the component implementation.
