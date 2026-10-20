@@ -32,7 +32,9 @@ Facilities remains an internal unit to preserve the brief's six functions.
 ## 3. A demonstrable slice versus infrastructure breadth
 
 React local state, a typed mock transport, plain CSS and a few behavior-focused tests
-are sufficient for one home screen. Dark mode is the single extra because it directly
+support three separate views in a shared shell. Hash navigation gives direct links,
+reloads and browser history on static hosting without a routing dependency.
+Overview is a summary; applications and news have dedicated pages. Dark mode directly
 supports late shifts and can be evaluated across all six brands. It persists only a
 device appearance preference.
 

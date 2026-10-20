@@ -1,16 +1,28 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { companies } from './config/companies';
 import { Icon } from './components/Icon';
 import { Modal } from './components/Modal';
-import { AppCard } from './components/AppCard';
 import { CriticalAlert } from './components/CriticalAlert';
-import { NewsCard, severityLabel } from './components/NewsCard';
+import { severityLabel } from './components/NewsCard';
 import { CompanyIdentity } from './components/CompanyIdentity';
 import { loadPortal, type DemoScenario } from './lib/api';
 import { formatDate, selectContent } from './lib/portal';
 import type { NewsItem, PortalApp, PortalData } from './types';
 
+import { usePage, pages } from './lib/navigation';
+import { OverviewPage } from './pages/OverviewPage';
+import { ApplicationsPage } from './pages/ApplicationsPage';
+import { NewsPage } from './pages/NewsPage';
+import {
+  ApplicationsSection,
+  NewsSection,
+  type PageProps,
+} from './pages/Sections';
+
 export default function App() {
+  const page = usePage();
+  const mainRef = useRef<HTMLElement>(null);
+  const previousPage = useRef(page);
   const [companyId, setCompanyId] = useState(companies[0].id);
   const company =
     companies.find((item) => item.id === companyId) ?? companies[0];
@@ -65,6 +77,18 @@ export default function App() {
     }
   }, [theme]);
 
+  useEffect(() => {
+    document.title = `${pages[page].label} · Finchglow workspace`;
+    if (previousPage.current !== page) {
+      setQuery('');
+      setSettledQuery('');
+      setModal(null);
+      mainRef.current?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      previousPage.current = page;
+    }
+  }, [page]);
+
   const retry = () => {
     setScenario('normal');
     setRequest((value) => value + 1);
@@ -78,15 +102,37 @@ export default function App() {
     '--brand-dark': company.darkAccent,
   } as CSSProperties;
 
+  const pageProps: PageProps = {
+    data,
+    content,
+    company,
+    loading,
+    searching,
+    isSearch,
+    error,
+    clearSearch,
+    onApp: (item) => setModal({ kind: 'app', item }),
+    onNews: (item) => setModal({ kind: 'news', item }),
+    onHelp: () => setModal({ kind: 'help' }),
+  };
+
   return (
     <div className="portal" style={themeStyle}>
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          mainRef.current?.focus();
+        }}
+      >
         Skip to main content
       </a>
       <aside className="sidebar">
         <a
           className="group-logo"
-          href="#main"
+          href="#/overview"
+          onClick={clearSearch}
           aria-label="Finchglow workspace home"
         >
           <span className="supplied-logo">
@@ -114,15 +160,32 @@ export default function App() {
         </div>
         <span className="nav-label">WORKSPACE</span>
         <nav aria-label="Workspace">
-          <a className="nav-home" href="#main" onClick={clearSearch}>
-            <Icon name="grid" /> Overview <span className="nav-dot" />
+          <a
+            className={page === 'overview' ? 'nav-home' : undefined}
+            aria-current={page === 'overview' ? 'page' : undefined}
+            href="#/overview"
+            onClick={clearSearch}
+          >
+            <Icon name="grid" /> Overview
           </a>
-          <a href="#apps">
+          <a
+            className={page === 'applications' ? 'nav-home' : undefined}
+            aria-current={page === 'applications' ? 'page' : undefined}
+            href="#/applications"
+            onClick={clearSearch}
+          >
             <Icon name="plane" /> My applications
           </a>
-          <a href="#news">
-            <Icon name="bell" /> News & updates{' '}
-            <span className="nav-count">{content?.news.length ?? '–'}</span>
+          <a
+            className={page === 'news' ? 'nav-home' : undefined}
+            aria-current={page === 'news' ? 'page' : undefined}
+            href="#/news"
+            onClick={clearSearch}
+          >
+            <Icon name="bell" /> News &amp; updates{' '}
+            <span className="nav-count">
+              {data ? selectContent(data, company.id).news.length : '–'}
+            </span>
           </a>
         </nav>
         <div className="sidebar-note">
@@ -148,7 +211,8 @@ export default function App() {
       <div className="workspace">
         <header className="topbar">
           <div className="breadcrumb">
-            Workspace <span>/</span> <strong>Overview</strong>
+            Workspace <span>/</span>{' '}
+            <strong>{isSearch ? 'Search' : pages[page].label}</strong>
           </div>
           <div className="search-box">
             <Icon name="search" size={19} />
@@ -186,15 +250,28 @@ export default function App() {
           </span>
         </header>
 
-        <main id="main" tabIndex={-1}>
+        <main id="main" ref={mainRef} tabIndex={-1}>
           <div className="page-heading">
             <div>
               <span className="eyebrow">YOUR WORKDAY, CONNECTED</span>
               <h1>
-                Welcome back, {data?.employee.name.split(' ')[0] ?? 'Samson'}
-                <span className="heading-period">.</span>
+                {isSearch ? (
+                  'Search your workspace'
+                ) : page === 'overview' ? (
+                  <>
+                    Welcome back,{' '}
+                    {data?.employee.name.split(' ')[0] ?? 'Samson'}
+                    <span className="heading-period">.</span>
+                  </>
+                ) : (
+                  pages[page].label
+                )}
               </h1>
-              <p>Your tools, your team, and what needs your attention.</p>
+              <p>
+                {isSearch
+                  ? 'Find applications and updates across your selected workspace.'
+                  : pages[page].description}
+              </p>
             </div>
             <div className="date-block">
               <span>TUESDAY</span>
@@ -262,177 +339,19 @@ export default function App() {
             </div>
           )}
 
-          <div className="content-columns">
-            <section
-              id="apps"
-              className="apps-section"
-              aria-labelledby="apps-heading"
-              aria-busy={loading || searching}
-            >
-              <div className="section-heading">
-                <div>
-                  <h2 id="apps-heading">
-                    Your applications{' '}
-                    <span className="count-pill">
-                      {content?.apps.length ?? '–'}
-                    </span>
-                  </h2>
-                </div>
-                <span className="section-meta">
-                  Everything you need to get started
-                </span>
-              </div>
-              {!data && loading ? (
-                <div className="apps-grid skeleton-grid" aria-hidden="true">
-                  {Array.from({ length: 6 }, (_, i) => (
-                    <div className="skeleton-card" key={i} />
-                  ))}
-                </div>
-              ) : content?.apps.length ? (
-                <div className="apps-grid">
-                  {content.apps.map((app) => (
-                    <AppCard
-                      key={app.id}
-                      app={app}
-                      onLaunch={(item) => setModal({ kind: 'app', item })}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="empty-state">
-                  <Icon name="search" size={28} />
-                  <h3>
-                    {error && !data ? 'Apps are unavailable' : 'No apps found'}
-                  </h3>
-                  <p>
-                    {error && !data
-                      ? 'Retry loading your workspace using the button above.'
-                      : 'Try a different keyword or switch your workspace.'}
-                  </p>
-                  {isSearch && (
-                    <button className="text-button" onClick={clearSearch}>
-                      Show all apps
-                    </button>
-                  )}
-                </div>
-              )}
-              <div className="access-note">
-                <Icon name="shield" size={17} />
-                <span>
-                  Tools are shown based on your access. Missing something?{' '}
-                  <button
-                    className="text-button"
-                    onClick={() => setModal({ kind: 'help' })}
-                  >
-                    Get help
-                  </button>
-                </span>
-              </div>
-            </section>
-
-            <aside className="at-a-glance" aria-labelledby="glance-heading">
-              <span className="eyebrow">YOUR PEOPLE & PLACE</span>
-              <h2 id="glance-heading">Workspace details</h2>
-              <div className="glance-row">
-                <span className="glance-icon">
-                  <Icon name="building" />
-                </span>
-                <div>
-                  <small>Your home company</small>
-                  <strong>
-                    {companies.find((c) => c.id === data?.employee.companyId)
-                      ?.name ?? 'FCM Travel Nigeria'}
-                  </strong>
-                </div>
-              </div>
-              <div className="glance-row">
-                <span className="glance-icon">
-                  <Icon name="globe" />
-                </span>
-                <div>
-                  <small>Your role</small>
-                  <strong>{data?.employee.role ?? 'Travel consultant'}</strong>
-                </div>
-              </div>
-              <div className="glance-divider" />
-              <span className="mini-label">
-                <Icon name="book" size={18} /> LEARNING & DEVELOPMENT
-              </span>
-              <h3>Your next skill starts here.</h3>
-              <p>
-                Explore courses and resources for your professional development.
-              </p>
-              <button
-                className="text-button"
-                onClick={() => {
-                  const learning =
-                    content?.apps.find((a) => a.id === 'learning') ??
-                    data?.apps.find(
-                      (a) =>
-                        a.id === 'learning' &&
-                        data.employee.appIds.includes(a.id),
-                    );
-                  if (learning) setModal({ kind: 'app', item: learning });
-                }}
-                disabled={!data}
-              >
-                Visit Learning hub <Icon name="arrow" size={16} />
-              </button>
-            </aside>
-          </div>
-
-          <section
-            id="news"
-            className="news-section"
-            aria-labelledby="news-heading"
-            aria-busy={loading || searching}
-          >
-            <div className="section-heading">
-              <div>
-                <h2 id="news-heading">
-                  News & updates{' '}
-                  <span className="count-pill">
-                    {content?.news.length ?? '–'}
-                  </span>
-                </h2>
-              </div>
-              <span className="section-meta">
-                Company updates & group announcements
-              </span>
+          {isSearch ? (
+            <div className="search-page">
+              <ApplicationsSection {...pageProps} />
+              <NewsSection {...pageProps} />
             </div>
-            {!data && loading ? (
-              <div className="news-grid" aria-hidden="true">
-                {[1, 2, 3].map((i) => (
-                  <div className="skeleton-card" key={i} />
-                ))}
-              </div>
-            ) : content?.news.length ? (
-              <div className="news-grid">
-                {content.news.map((item) => (
-                  <NewsCard
-                    key={item.id}
-                    item={item}
-                    company={company}
-                    onRead={(item) => setModal({ kind: 'news', item })}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <Icon name="bell" size={28} />
-                <h3>
-                  {error && !data
-                    ? 'Updates are unavailable'
-                    : 'No matching updates'}
-                </h3>
-                <p>
-                  {error && !data
-                    ? 'Retry to check for important alerts.'
-                    : 'Try a shorter search. Critical alerts always stay visible above.'}
-                </p>
-              </div>
-            )}
-          </section>
+          ) : page === 'applications' ? (
+            <ApplicationsPage {...pageProps} />
+          ) : page === 'news' ? (
+            <NewsPage {...pageProps} />
+          ) : (
+            <OverviewPage {...pageProps} />
+          )}
+
           <footer className="page-footer">
             <span>
               Finchglow Holdings <span className="footer-dot">·</span> Better,

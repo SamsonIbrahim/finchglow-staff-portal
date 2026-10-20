@@ -616,9 +616,7 @@ h1 {
   padding: 20px 18px 0;
   text-align: left;
   min-width: 0;
-  transition:
-    border-color var(--duration),
-    background var(--duration);
+  transition: border-color var(--duration);
 }
 .app-card:hover {
   border-color: var(--primary);
@@ -786,6 +784,18 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 28px;
+}
+.news-page .news-section {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  flex-shrink: 0;
 }
 .news-card {
   position: relative;

@@ -57,6 +57,68 @@ try {
     await page.screenshot({ path: `artifacts/overview-${theme}.png` });
   }
   await page.getByRole('button', { name: 'Switch to light mode' }).click();
+  for (const [route, label] of [
+    ['applications', 'My applications'],
+    ['news', 'News & updates'],
+  ]) {
+    await page
+      .getByRole('navigation', { name: 'Workspace' })
+      .getByRole('link', { name: label })
+      .click();
+    await page
+      .getByRole('heading', { name: label, exact: true, level: 1 })
+      .waitFor();
+    assert.equal(new URL(page.url()).hash, `#/${route}`);
+    assert.equal(await page.locator('nav [aria-current="page"]').count(), 1);
+    assert.equal(
+      await page.locator(route === 'news' ? '#apps' : '#news').count(),
+      0,
+    );
+    await page.reload();
+    await page.getByRole('alert', { name: 'Critical group alert' }).waitFor();
+    await page
+      .getByRole('heading', { name: label, exact: true, level: 1 })
+      .waitFor();
+    for (const width of [1440, 768, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        `${route} overflow at ${width}px`,
+      );
+      const scan = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      checks.push({ state: route, width, violations: scan.violations });
+      if (width === 390 || width === 1440)
+        await page.screenshot({
+          path: `artifacts/${route}-${width}.png`,
+          fullPage: true,
+        });
+    }
+  }
+  await page.goBack();
+  await page
+    .getByRole('heading', { name: 'My applications', exact: true, level: 1 })
+    .waitFor();
+  await page.goForward();
+  await page
+    .getByRole('heading', { name: 'News & updates', exact: true, level: 1 })
+    .waitFor();
+  await page
+    .getByLabel('Your workspace', { exact: true })
+    .selectOption('academy');
+  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+  await page.getByRole('link', { name: 'Overview', exact: true }).click();
+  await page.getByRole('heading', { name: /Welcome back/ }).waitFor();
+  assert.equal(
+    await page.getByLabel('Your workspace', { exact: true }).inputValue(),
+    'academy',
+  );
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+  await page.getByLabel('Your workspace', { exact: true }).selectOption('tmc');
+  await page.getByRole('button', { name: 'Switch to light mode' }).click();
   for (const width of [768, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
     assert(

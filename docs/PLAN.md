@@ -32,7 +32,7 @@ with no invented logo. All employee, incident and news content is fictional.
 
 ## Scope
 
-React, TypeScript, Vite, plain CSS. No routing/state/UI libraries for a single screen.
+React, TypeScript, Vite, plain CSS. Three separate views use hash navigation and a shared shell without routing/state/UI libraries.
 Mock application launches explain the intended destination. Authentication, real
 notifications, offline caching and persistent personal data remain production work.
 Repository/zip first; public hosting and recruitment submission are separate actions.

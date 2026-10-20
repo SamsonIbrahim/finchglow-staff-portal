@@ -10,7 +10,7 @@ Use your own words; do not describe checks you have not personally performed.
 disruption. I treated this as a work-starting surface, not a reporting dashboard.”
 
 Explain the mock employee, fixed date and verified company artwork. Mention the
-limited scope: a home experience, no real backend or SSO.
+limited scope: three workspace pages, no real backend or SSO.
 
 ## 2:00–6:00 · Desktop journey
 
@@ -18,6 +18,8 @@ limited scope: a home experience, no real backend or SSO.
 2. Explain why the critical payment alert appears before the launcher.
 3. Open the alert: clear instructions and next update, then Escape.
 4. Launch Booking workspace. Explain that the dialog is an honest integration boundary.
+   Open My applications to see every available tool, then News & updates for the full
+   feed. Show browser Back and Forward, and explain that Overview contains previews.
 5. Switch to Lagos Aviation Academy: logo/accent/apps/news change, group outage remains.
 6. Search “leave” to locate People & HR. Search “zzzz” to show empty states while
    the critical alert remains visible; clear the search.

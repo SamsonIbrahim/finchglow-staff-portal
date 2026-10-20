@@ -104,16 +104,24 @@ assessment concept, not an official branded service.
 | `src/lib/api.ts`          | Abortable mock transport and deterministic failure scenarios     |
 | `src/lib/portal.ts`       | Pure visibility, entitlement, search and severity ordering logic |
 | `src/components/`         | App cards, news cards, critical alerts, icons and modal behavior |
-| `src/App.tsx`             | Single-screen composition, loading/search/company/theme state    |
+| `src/App.tsx`             | Shared shell, loading/search/company/theme state                 |
+| `src/pages/`              | Separate Overview, My applications and News & updates views      |
+| `src/lib/navigation.ts`   | Hash navigation with direct links and browser history            |
 | `src/tokens.css`          | Primitive and semantic design tokens, including dark theme       |
 | `src/styles.css`          | Shared component styles and responsive layout                    |
 | `src/design-system.tsx`   | Live reference using the same tokens and components              |
 | `scripts/`                | Bundle measurement and browser verification                      |
 
-Local React state is enough for one screen. There is no router, global state
+Local React state supports the three views within one shared shell. There is no router library, global state
 library, UI framework, icon package or remote font. The mock data is a separate
 lazy-loaded chunk; the same `loadPortal` contract can later call a real endpoint.
 Effects abort obsolete requests, including React Strict Mode's development replay.
+
+Routes are `/#/overview`, `/#/applications` and `/#/news`. Hash routes support
+direct reloads on static hosting without rewrite configuration. Overview previews
+three apps and two updates; dedicated pages show their complete lists. Navigation
+preserves company and theme, updates the document title, moves focus to main content
+and clears search. Global search shows matching apps and updates on any route.
 
 To add a seventh business:
 
@@ -132,7 +140,7 @@ widths. The automated browser run includes:
 
 - Axe WCAG 2 A/AA and 2.1 AA checks for all six companies in both themes, three
   narrower layouts and an open dialog, plus the design reference at desktop/phone
-  widths in both themes: **20 scans, zero violations**.
+  widths in both themes: **28 scans, zero violations**.
 - No horizontal overflow at tested widths.
 - Keyboard app launch, dialog focus containment, Escape dismissal and focus return.
 - Critical alert visibility during unmatched search and failed refresh, plus retry.
@@ -153,9 +161,9 @@ shared tablets remain outstanding; the browser tests use desktop Chrome emulatio
 
 ## Performance
 
-Measured workspace JS + CSS, including the mock chunk: **263.90 KiB raw /
-81.83 KiB gzip**. The default workspace's group and FCM logo assets add
-**175.32 KiB gzip**, for a combined **257.15 KiB gzip** code-and-logo estimate.
+Measured workspace JS + CSS, including the mock chunk: **266.40 KiB raw /
+82.56 KiB gzip**. The default workspace's group and FCM logo assets add
+**175.32 KiB gzip**, for a combined **257.88 KiB gzip** code-and-logo estimate.
 The separate design reference has its own entry and does not add its page code
 to the staff workspace. Run `npm run build && npm run size` for exact current figures.
 Gzip sizes describe compressed build assets, not a measured network response or
@@ -184,7 +192,7 @@ telemetry, real employee data or actual system integration is implemented.
 
 ## Scope and next week
 
-This is a single home experience. Authentication, real app launching, incident
+This is a three-page staff workspace. Authentication, real app launching, incident
 delivery, offline caching, read acknowledgements and personal app ordering are
 deliberately out of scope. There is no claim that an alert reaches someone who is
 offline, and retained in-memory data does not survive a reload.

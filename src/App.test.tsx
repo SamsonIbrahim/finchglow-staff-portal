@@ -7,6 +7,8 @@ import App from './App';
 
 vi.mock('./lib/api', () => ({ loadPortal: vi.fn() }));
 beforeEach(() => {
+  window.history.replaceState({}, '', '/');
+  window.scrollTo = vi.fn();
   vi.mocked(loadPortal).mockResolvedValue(mockData);
   document.documentElement.dataset.theme = 'light';
 });
@@ -16,6 +18,8 @@ describe('portal interactions', () => {
     const user = userEvent.setup();
     render(<App />);
     await screen.findByRole('button', { name: /Booking workspace Flights/ });
+    await user.click(screen.getByRole('link', { name: 'My applications' }));
+    await screen.findByRole('heading', { name: 'My applications' });
     await user.selectOptions(
       screen.getByLabelText('Your workspace'),
       'academy',
